@@ -7,14 +7,15 @@ import (
 
 type Authorization interface {
 	CreateUser(user domain.User) (int, error)
+	GenerateToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type TodoListInterface interface {
-
+	Create(userID int, list domain.TodoList) (int, error)
 }
 
 type TodoItemInterface interface {
-
 }
 
 type Service struct {
@@ -23,8 +24,9 @@ type Service struct {
 	TodoListInterface
 }
 
-func NewService(repos *repository.Repository ) *Service {
+func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: NewAuthService(repos.Authorization),
+		Authorization:     NewAuthService(repos.Authorization),
+		TodoListInterface: NewTodoListService(repos.TodoListInterface),
 	}
 }
