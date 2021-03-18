@@ -5,9 +5,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Authorization interface {
-	CreateUser(user domain.User) (int, error)
-}
+type (
+	Authorization interface {
+		CreateUser(user domain.User) (int, error)
+		GetUser(username, password string) (domain.User, error)
+	}
+)
 
 type TodoListInterface interface {
 
