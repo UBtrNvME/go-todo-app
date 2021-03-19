@@ -40,9 +40,28 @@ func (r TodoListPostgres) Create(userID int, list domain.TodoList) (int, error) 
 
 func (r TodoListPostgres) GetAll(userID int) ([]domain.TodoList, error) {
 	var lists []domain.TodoList
-	getListQuery := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1",
+	getListsQuery := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1",
 		todoListsTable, usersListsTable)
-	err := r.db.Select(&lists, getListQuery, userID)
+	err := r.db.Select(&lists, getListsQuery, userID)
 
 	return lists, err
+}
+
+func (r TodoListPostgres) GetById(userID, listId int) (domain.TodoList, error) {
+	var list domain.TodoList
+	getListQuery := fmt.Sprintf(
+		`SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id 
+				WHERE ul.user_id = $1 AND ul.user_id = $2`,
+		todoListsTable, usersListsTable)
+	err := r.db.Get(&list, getListQuery, userID, listId)
+
+	return list, err
+}
+
+func (r TodoListPostgres) Update(userID, listId int, data interface{}) error {
+	panic("implement me")
+}
+
+func (r TodoListPostgres) Delete(userID, listId int) error {
+	panic("implement me")
 }

@@ -20,3 +20,16 @@ func (s TodoListService) Create(userID int, list domain.TodoList) (int, error) {
 func (s TodoListService) GetAll(userID int) ([]domain.TodoList, error) {
 	return s.repo.GetAll(userID)
 }
+
+func (s TodoListService) GetById(userID, listId int) (domain.TodoList, error) {
+	return s.repo.GetById(userID, listId)
+}
+
+func (s TodoListService) Update(userID, listId int, data interface{}) error {
+	panic("implement me")
+}
+
+func (s TodoListService) Delete(userID, listId int) error {
+	panic("implement me")
+}
+
