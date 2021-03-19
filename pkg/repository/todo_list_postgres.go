@@ -14,8 +14,8 @@ func NewTodoListPostgres(db *sqlx.DB) *TodoListPostgres {
 	return &TodoListPostgres{db: db}
 }
 
-func (t TodoListPostgres) Create(userID int, list domain.TodoList) (int, error) {
-	tx, err := t.db.Begin()
+func (r TodoListPostgres) Create(userID int, list domain.TodoList) (int, error) {
+	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
 	}
@@ -36,4 +36,13 @@ func (t TodoListPostgres) Create(userID int, list domain.TodoList) (int, error) 
 	}
 
 	return id, tx.Commit()
+}
+
+func (r TodoListPostgres) GetAll(userID int) ([]domain.TodoList, error) {
+	var lists []domain.TodoList
+	getListQuery := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1",
+		todoListsTable, usersListsTable)
+	err := r.db.Select(&lists, getListQuery, userID)
+
+	return lists, err
 }
